@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Token Create</title>
+  <link href="../css/bootstrap.css" rel="stylesheet">
+  <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/bootstrap.js"></script>
+  <script src="../js/bootstrap-datetimepicker.min.js"></script>
+  <script src="../js/bootstrap-datetimepicker.zh-CN.js"></script>
+  <script src="../js/index.js"></script>
+  <script type="text/javascript">
+
+  </script>
+
+  <style>
+    .tmodule{
+    width:600px;
+    text-align:left;
+    margin:0 auto;
+  }
+  .tmoduledis{
+    width:400px;
+    text-align:left;
+    margin:0 auto;
+    display:none;
+  }
+   .line {
+     height: 10px;
+     border-bottom: 1px gray solid;
+     }
+   .pline{
+     position: relative;
+     top:-5px;
+   }
+  </style>
+</head>
+
+<body onload="initDatepickle()">
+  <br>
+  <div class="tmodule" style="text-align:center">
+    <div class="input-group">
+      <span class="input-group-addon">accessKey</span>
+      <input type="text" class="form-control" placeholder="" id="accessKey">
+    </div>
+    <br>
+
+    <div class="input-group">
+      <span class="input-group-addon">&nbsp;secretKey</span>
+      <input type="text" class="form-control" placeholder="" id="secretKey">
+    </div>
+    <br>
+
+    <div class="input-group">
+      <span class="input-group-addon">&nbsp;&nbsp;过期时间</span>
+      <input placeholder="默认一小时" id="datetimepicker" type="text" class="form-control"/>
+    </div>
+    </br>
+
+    <button type="button" class="btn btn-primary" onclick="createToken()">生成token</button>
+  </div>
+
+  <br><br><br>
+  <!-- <ul class="nav nav-pills nav-justified">
+    <li class="active" onclick="choice(this)"><a href="/accesstoken" target="tokenArea">accessToken</a></li>
+    <li onclick="choice(this)"><a href="/qiniutoken" target="tokenArea">qiniuToken</a></li>
+    <li onclick="choice(this)"><a href="/uploadtoken" target="tokenArea">uploadToken</a></li>
+    <li onclick="choice(this)"><a href="/downloadtoken" target="tokenArea">downloadToken</a></li>
+    <li onclick="choice(this)"><a href="/roomtoken" target="tokenArea">roomToken</a></li>
+  </ul> -->
+  <ul class="nav nav-pills nav-justified">
+    <li class="active" onclick="choice(this)" id="acc_token"><a href="#">accessToken</a></li>
+    <li onclick="choice(this)" id="qn_token"><a href="#">qiniuToken</a></li>
+    <li onclick="choice(this)" id="up_token"><a href="#">uploadToken</a></li>
+    <li onclick="choice(this)" id="dn_token"><a href="#">downloadToken</a></li>
+    <li onclick="choice(this)" id="room_token"><a href="#">roomToken</a></li>
+  </ul>
+
+
+  <!-- <iframe id="myFrameId" name="tokenArea" scrolling="no" frameborder="0"></iframe>-->
+  <div id="token_module">
+    <!-- accesstoken -->
+    <div class="tmodule" id="module_access">
+      <table class="table" style="height:auto">
+        </br>
+        <div class="alert alert-warning">
+          管理凭证，需要Authorization: QBox<管理凭证>鉴权的url，其他请参考&nbsp;<a href="https://developer.qiniu.com/kodo/manual/1201/access-token">管理凭证</a>
+        </div>
+        <thead>
+          <tr>
+            <th>字段</th>
+            <th>值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="color:red">*</span>Api Host</td>
+            <td><input type="text" class="form-control" id="acc_apiUrl" placeholder="例如：http://rs.qiniu.com/stat"></td>
+          </tr>
+          <tr>
+            <td>资源</td>
+            <td><input type="text" class="form-control" id="acc_reqUrl" placeholder="bucket:key"></td>
+          </tr>
+          <tr>
+            <td>contentType</td>
+            <td><input type="text" class="form-control" id="acc_conType"></td>
+          </tr>
+          <tr>
+            <td>requestBody</td>
+            <td><input type="text" class="form-control" id="acc_reqBody"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- uploadtoken -->
+    <div class="tmoduledis" id="module_upload">
+      <table class="table" style="height:auto">
+        </br>
+        <div class="alert alert-warning">
+          上传凭证，只填scrop默认一小时权限，其他参数请参考&nbsp;<a href="https://developer.qiniu.com/kodo/manual/1206/put-policy">上传策略</a>
+        </div>
+        <thead>
+          <tr>
+            <th>字段</th>
+            <th>值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="color:red">*</span>scope</td>
+            <td><input type="text" class="form-control" id="up_scope"></td>
+          </tr>
+          <tr>
+            <td>returnBody</td>
+            <td><input type="text" class="form-control" id="up_retBody"></td>
+          </tr>
+          <tr>
+            <td>persistentOps</td>
+            <td><input type="text" class="form-control" id="up_perOps"></td>
+          </tr>
+          <tr>
+            <td>persistentNotifyUrl</td>
+            <td><input type="text" class="form-control" id="up_perNotifyUrl"></td>
+          </tr>
+          <tr>
+            <td>persistentPipeline</td>
+            <td><input type="text" class="form-control" id="up_perPipeline"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="line"></div>
+
+      <font color="red">上下方式任选其一生成token即可</font>
+      <p class="pline"></p>
+      <div class="input-group">
+        <span class="input-group-addon">自定义策略</span>
+        <input type="text" class="form-control" placeholder="" id="up_owned">
+      </div>
+    </div>
+
+
+    <!-- Room Token -->
+    <div class="tmoduledis" id="module_room">
+      <table class="table" style="height:auto">
+        </br>
+        <div class="alert alert-warning">
+          实时音视频连麦凭证，其他参数请参考&nbsp;<a href="https://developer.qiniu.io/rtn/sdk/4538/server-api-reference#5">服务端手册</a>
+        </div>
+        <thead>
+          <tr>
+            <th>字段</th>
+            <th>值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="color:red">*</span>appId</td>
+            <td><input type="text" class="form-control" id="room_id"></td>
+          </tr>
+          <tr>
+            <td><span style="color:red">*</span>roomName</td>
+            <td><input type="text" class="form-control" id="room_name"></td>
+          </tr>
+          <tr>
+            <td><span style="color:red">*</span>userId</td>
+            <td><input type="text" class="form-control" id="room_uid"></td>
+          </tr>
+          <tr>
+            <td>permission</td>
+            <td>
+              <div class="col-sm-6">
+                <select id="room_permission" name="select" class="selectpicker show-tick form-control">
+                  　　<option value="user" selected="selected">user</option>
+                  　　<option value="admin">admin</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Download Token -->
+    <div class="tmoduledis" id="module_download">
+      <table class="table" style="height:auto">
+        </br>
+        <div class="alert alert-warning">
+          下载凭证，详情参考&nbsp;<a href="https://developer.qiniu.com/kodo/manual/1202/download-token">下载凭证</a>
+        </div>
+        <thead>
+          <tr>
+            <th>字段</th>
+            <th>值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="color:red">*</span>资源Url</td>
+            <td><input type="text" class="form-control" id="dn_url"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+    <!-- Qiniu Token -->
+    <div class="tmoduledis" id="module_qiniu">
+      <table class="table" style="height:auto">
+        </br>
+        <div class="alert alert-warning">
+          七牛鉴权，需要Authorization: Qiniu<七牛鉴权>进行鉴权的操作，其他请参考&nbsp;<a href="https://developer.qiniu.com/dora/kb/3702/QiniuToken">七牛鉴权</a>
+        </div>
+        <thead>
+          <tr>
+            <th>字段</th>
+            <th>值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="color:red">*</span>Api Host</td>
+            <td><input type="text" class="form-control" id="qn_apiUrl" placeholder="例如：http://pili.qiniuapi.com/v2/hubs/<yourhub>/streams"></td>
+          </tr>
+          <tr>
+            <td>资源</td>
+            <td><input type="text" class="form-control" id="qn_reqUrl" placeholder="bucket:key"></td>
+          </tr>
+          <tr>
+            <td>contentType</td>
+            <td><input type="text" class="form-control" id="qn_conType"></td>
+          </tr>
+          <tr>
+            <td>requestBody</td>
+            <td><input type="text" class="form-control" id="qn_reqBody" placeholder='{"key":"tokentest"}'></td>
+          </tr>
+          <tr>
+            <td>method</td>
+            <td>
+              <div class="col-sm-6">
+                <select id="qn_method" name="select" class="selectpicker show-tick form-control">
+                  　　<option value="GET" selected="selected">GET</option>
+                  　　<option value="POST">POST</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+
+  </div>
+  <!-- 模态框（Modal） -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">Token</h4>
+              </div>
+              <div class="modal-body" id="token_display"></div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+  </div>
+</body>
+
+</html>

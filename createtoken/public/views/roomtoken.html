@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link href="../css/bootstrap.css" rel="stylesheet">
+  <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/bootstrap.js"></script>
+  <script src="../js/bootstrap-datetimepicker.min.js"></script>
+  <script src="../js/bootstrap-datetimepicker.zh-CN.js"></script>
+  <script src="../js/index.js"></script>
+
+  <script type="text/javascript">
+    $(window.parent.document).find("#myFrameId").load(function() {
+      var main = $(window.parent.document).find("#myFrameId");
+      var thisheight = $(document).height() + 30;
+      var thiswidth = $(document).width() + 30;
+      main.height(thisheight);
+      main.width(thiswidth);
+    });
+  </script>
+</head>
+
+<body>
+  <div style="width:400px; text-align:left;margin:0 auto; ">
+    <table class="table" style="height:auto">
+      <caption>Qiniu Token</caption>
+      <thead>
+        <tr>
+          <th>字段</th>
+          <th>值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span style="color:red">*</span>appId</td>
+          <td><input type="text" class="form-control"></td>
+        </tr>
+        <tr>
+          <td><span style="color:red">*</span>roomName</td>
+          <td><input type="text" class="form-control"></td>
+        </tr>
+        <tr>
+          <td><span style="color:red">*</span>userId</td>
+          <td><input type="text" class="form-control"></td>
+        </tr>
+        <tr>
+          <td>permission</td>
+          <td>
+            <div class="col-sm-6">
+              <select id="select" name="select" class="selectpicker show-tick form-control">
+                　　<option value="猕猴桃" selected="selected">user</option>
+                　　<option value="桃子">admin</option>
+              </select>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link href="../css/bootstrap.css" rel="stylesheet">
+  <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/bootstrap.js"></script>
+  <script src="../js/bootstrap-datetimepicker.min.js"></script>
+  <script src="../js/bootstrap-datetimepicker.zh-CN.js"></script>
+  <script src="../js/index.js"></script>
+
+  <script type="text/javascript">
+    $(window.parent.document).find("#myFrameId").load(function() {
+      var main = $(window.parent.document).find("#myFrameId");
+      var thisheight = $(document).height() + 30;
+      var thiswidth = $(document).width() + 30;
+      main.height(thisheight);
+      main.width(thiswidth);
+    });
+  </script>
+</head>
+
+<body>
+  <div style="width:400px; text-align:left;margin:0 auto; ">
+  <table class="table" style="height:auto">
+    <caption>基础凭证，红色*标记为必填</caption>
+    <thead>
+      <tr>
+        <th>字段</th>
+        <th>值</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span style="color:red">*</span>scope</td>
+        <td><input type="text" class="form-control"></td>
+      </tr>
+      <tr>
+        <td>isPrefixalScope</td>
+        <td><input type="text" class="form-control"></td>
+      </tr>
+      <tr>
+        <td>returnBody</td>
+        <td><input type="text" class="form-control"></td>
+      </tr>
+      <tr>
+        <td>persistentOps</td>
+        <td><input type="text" class="form-control"></td>
+      </tr>
+      <tr>
+        <td>persistentNotifyUrl</td>
+        <td><input type="text" class="form-control"></td>
+      </tr>
+      <tr>
+        <td>persistentPipeline</td>
+        <td><input type="text" class="form-control"></td>
+      </tr>
+    </tbody>
+  </table>
+<hr style="border:3 solid #6C6C6C" width="100%" size=3/>
+
+</div>
+</body>
+
+</html>
