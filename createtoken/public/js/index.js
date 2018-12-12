@@ -166,22 +166,34 @@ function createRoom() {
 }
 
 function createUp() {
+  var owned  = $("#up_owned").val().trim();
   var scope = $("#up_scope").val();
   var retBody = $("#up_retBody").val();
   var perOps = $("#up_perOps").val();
   var perNotifyUrl = $("#up_perNotifyUrl").val();
   var perPipeline = $("#up_perPipeline").val();
-  var jsonData = {
-    "action":"uptoken",
-    "ak": ak,
-    "sk": sk,
-    "scope": scope,
-    "returnBody": retBody,
-    "persistentOps": perOps,
-    "persistentNotifyUrl": perNotifyUrl,
-    "persistentPipeline": perPipeline,
-    "deadline": deadline,
-  };
+  var jsonData;
+  if(owned!=""&&owned!=undefined){
+    jsonData={
+      "action":"uptoken",
+      "ak": ak,
+      "sk": sk,
+      "owned":owned,
+      "deadline": deadline,
+    };
+  }else{
+    jsonData = {
+      "action":"uptoken",
+      "ak": ak,
+      "sk": sk,
+      "scope": scope,
+      "returnBody": retBody,
+      "persistentOps": perOps,
+      "persistentNotifyUrl": perNotifyUrl,
+      "persistentPipeline": perPipeline,
+      "deadline": deadline,
+    };
+  }
   return ajaxPost(jsonData);
 }
 

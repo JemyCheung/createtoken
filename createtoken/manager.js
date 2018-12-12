@@ -12,6 +12,7 @@ exports.getOptions = function(data) {
 
 exports.getUpOptions = function(data) {
   var ret={};
+  console.log(data);
   for(var item in data){
     if(item=="deadline"){
       var time = parseInt((new Date().getTime())/1000);
@@ -21,6 +22,8 @@ exports.getUpOptions = function(data) {
     }
   }
   ret = JSON.stringify(ret);
+  console.log(typeof(ret));
   ret = JSON.parse(ret);
+  console.log(typeof(ret));
   return ret;
 };
