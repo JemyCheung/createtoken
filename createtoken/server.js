@@ -38,15 +38,15 @@ app.post('/gettoken', function(req, res) {
     if (action == "acctoken") { //done
       console.log("acctoken");
       var mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
-      var enUrl = qiniu.util.urlsafeBase64Encode(body.reqUrl);
-      token = qiniu.util.generateAccessToken(mac, body.apiUrl + "/" + enUrl, body.conType, body.reqBody);
+      console.log(body.sch + "://" + body.host + body.path);
+      console.log(body.conType);
+      token = qiniu.util.generateAccessToken(mac, body.sch + "://" + body.host + body.path, body.conType, body.reqBody);
       res.write(token);
       res.end();
     } else if (action == "qntoken") {
       console.log("qntoken");
       var mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
-      var enUrl = qiniu.util.urlsafeBase64Encode(body.reqUrl);
-      token = qiniu.util.generateAccessTokenV2(mac, body.apiUrl + "/" + enUrl, body.method, body.conType, body.reqBody);
+      token = qiniu.util.generateAccessTokenV2(mac, body.sch + "://" + body.host + body.path, body.method, body.conType, body.reqBody);
       res.write(token);
       res.end();
     } else if (action == "roomtoken") { //done
@@ -72,8 +72,8 @@ app.post('/gettoken', function(req, res) {
         token = bucketManager.privateDownloadUrl(host,
           key,
           deadline);
-      }catch(e){
-        res.write("something error occur:"+e);
+      } catch (e) {
+        res.write("something error occur:" + e);
         res.end();
       }
       res.write(token);

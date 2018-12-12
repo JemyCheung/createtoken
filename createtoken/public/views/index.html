@@ -52,13 +52,13 @@
 
     <div class="input-group">
       <span class="input-group-addon">&nbsp;secretKey</span>
-      <input type="text" class="form-control" placeholder="" id="secretKey" data-placement="right" data-trigger="manual" data-content="请先填写secretKey">
+      <input type="password" class="form-control" placeholder="" id="secretKey" data-placement="right" data-trigger="manual" data-content="请先填写secretKey">
     </div>
     <br>
 
     <div class="input-group">
       <span class="input-group-addon">&nbsp;&nbsp;过期时间</span>
-      <input placeholder="默认一小时" id="datetimepicker" type="text" class="form-control"/>
+      <input placeholder="默认一小时" id="datetimepicker" type="text" class="form-control" />
     </div>
     </br>
 
@@ -100,12 +100,30 @@
         </thead>
         <tbody>
           <tr>
-            <td><span style="color:red">*</span>Api Host</td>
-            <td><input type="text" class="form-control" id="acc_apiUrl" placeholder="例如：http://rs.qiniu.com/stat" data-placement="right" data-trigger="manual" data-content="请先填写需验证的接口host"></td>
+            <td><span style="color:red">*</span>schema+host</td>
+            <td>
+              <!-- <div class="col-sm-6">
+                <select id="acc_http" name="select" style="width:20%" class="selectpicker show-tick form-control">
+                  　　<option value="http://" selected="selected">http</option>
+                  　　<option value="https://">https</option>
+                </select>
+                <input style="width:80%" type="text" class="form-control" id="acc_apiUrl" placeholder="例如：rs.qiniu.com" data-placement="right" data-trigger="manual" data-content="请先填写需验证的接口host">
+              </div> -->
+              <div class="input-group">
+                <div class="input-group-btn">
+                  <button type="button" id="acc_sch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:70px">http <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#" onclick="changeText_Host(this)">http</a></li>
+                    <li><a href="#" onclick="changeText_Host(this)">https</a></li>
+                  </ul>
+                </div><!-- /btn-group -->
+                <input type="text" class="form-control" id="acc_host" placeholder="eg: rs.qiniu.com" data-placement="right" data-trigger="manual" data-content="host need write">
+              </div><!-- /input-group -->
+            </td>
           </tr>
           <tr>
-            <td>资源</td>
-            <td><input type="text" class="form-control" id="acc_reqUrl" placeholder="bucket:key"></td>
+            <td><span style="color:red">*</span>path</td>
+            <td><input type="text" class="form-control" id="acc_path" placeholder="/stat/<urlsafeBase64Encode>" data-placement="right" data-trigger="manual" data-content="path need write"></td>
           </tr>
           <tr>
             <td>contentType</td>
@@ -143,15 +161,15 @@
           </tr>
           <tr>
             <td>persistentOps</td>
-            <td><input type="text" class="form-control" id="up_perOps"></td>
+            <td><input type="text" class="form-control" id="up_perOps" placeholder='avthumb/m3u8/noDomain/1/segtime/15/vb/440k'></td>
           </tr>
           <tr>
             <td>persistentNotifyUrl</td>
-            <td><input type="text" class="form-control" id="up_perNotifyUrl"></td>
+            <td><input type="text" class="form-control" id="up_perNotifyUrl" placeholder="http://fake.com/qiniu/notify"></td>
           </tr>
           <tr>
             <td>persistentPipeline</td>
-            <td><input type="text" class="form-control" id="up_perPipeline"></td>
+            <td><input type="text" class="form-control" id="up_perPipeline" placeholder="test"></td>
           </tr>
         </tbody>
       </table>
@@ -243,21 +261,40 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <!-- <tr>
             <td><span style="color:red">*</span>Api Host</td>
             <td><input type="text" class="form-control" id="qn_apiUrl" placeholder="例如：http://pili.qiniuapi.com/v2/hubs/<yourhub>/streams" data-placement="right" data-trigger="manual" data-content="请先填写需要鉴权的api host"></td>
           </tr>
           <tr>
             <td>资源</td>
             <td><input type="text" class="form-control" id="qn_reqUrl" placeholder="bucket:key"></td>
+          </tr> -->
+          <tr>
+            <td><span style="color:red">*</span>schema+host</td>
+            <td>
+              <div class="input-group">
+                <div class="input-group-btn">
+                  <button type="button" id="qn_sch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:70px">http <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#" onclick="changeText_Host_Q(this)">http</a></li>
+                    <li><a href="#" onclick="changeText_Host_Q(this)">https</a></li>
+                  </ul>
+                </div><!-- /btn-group -->
+                <input type="text" class="form-control" id="qn_host" placeholder="pili.qiniuapi.com" data-placement="right" data-trigger="manual" data-content="host need write">
+              </div><!-- /input-group -->
+            </td>
+          </tr>
+          <tr>
+            <td><span style="color:red">*</span>path</td>
+            <td><input type="text" class="form-control" id="qn_path" placeholder="/v2/hubs/<yourhub>/streams" data-placement="right" data-trigger="manual" data-content="path need write"></td>
           </tr>
           <tr>
             <td>contentType</td>
-            <td><input type="text" class="form-control" id="qn_conType"></td>
+            <td><input type="text" class="form-control" id="qn_conType" placeholder="application/json"></td>
           </tr>
           <tr>
             <td>requestBody</td>
-            <td><input type="text" class="form-control" id="qn_reqBody" placeholder='{"key":"tokentest"}'></td>
+            <td><input type="text" class="form-control" id="qn_reqBody" placeholder='{"key":"<StreamTitle>"}'></td>
           </tr>
           <tr>
             <td>method</td>
@@ -279,18 +316,18 @@
   </div>
   <!-- 模态框（Modal） -->
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title" id="myModalLabel">Token</h4>
-              </div>
-              <div class="modal-body" id="token_display" style="word-break:break-all"></div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-              </div>
-          </div><!-- /.modal-content -->
-      </div><!-- /.modal -->
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Token</h4>
+        </div>
+        <div class="modal-body" id="token_display" style="word-break:break-all"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
   </div>
 </body>
 

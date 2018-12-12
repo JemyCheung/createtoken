@@ -1,7 +1,7 @@
-var data = { "scope": "androidtest", "returnBody": "{'key': $(key)}", "deadline": 1544587293 };
-
- console.log(typeof(data));
- console.log(data.scope);
+// var data = { "scope": "androidtest", "returnBody": "{'key': $(key)}", "deadline": 1544587293 };
+//
+//  console.log(typeof(data));
+//  console.log(data.scope);
 //
 // var ret={};
 //
@@ -29,10 +29,10 @@ var data = { "scope": "androidtest", "returnBody": "{'key': $(key)}", "deadline"
 //
 // console.log(1545473456-time);
 
-// var qiniu = require('qiniu')
-//  var enUrl = qiniu.util.urlsafeBase64Encode
-//  ("androidtest:065a5c567bb06caed1e0847704bba91c.jpg");
-//  console.log(enUrl);
+var qiniu = require('qiniu')
+ var enUrl = qiniu.util.urlsafeBase64Encode
+ ("androidtest:065a5c567bb06caed1e0847704bba91c.jpg");
+ console.log(enUrl);
 //
 // var mac = new qiniu.auth.digest.Mac("MP_Ebql_lSsUrDr7WrXn_5vKocQDLvTPCNEFeVmp", "YZlfOKeuQVA0h7yuCJrkdcYlbcGYwEP7A8YVG9-P");
 // token = qiniu.util.generateAccessTokenV2(mac, "http://serve.atlab.ai/v1/eval/facex-detect","POST","application/json", '{"data":{"uri":"http://img.blog.ijemy.com/QQ%E6%88%AA%E5%9B%BE20181120222617.png"}}');

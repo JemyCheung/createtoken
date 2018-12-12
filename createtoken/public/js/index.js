@@ -54,7 +54,7 @@ function dateFormat() {
   deadline = $("#datetimepicker").val();
   if (deadline == "" || deadline == undefined || deadline == NaN) {
     date = Date.parse(new Date());
-    deadline = (date+3600000) / 1000;
+    deadline = (date + 3600000) / 1000;
   } else {
     date = new Date(Date.parse(deadline.replace(/-/g, "/")));
     date = date.getTime();
@@ -92,24 +92,37 @@ function createToken() {
   }
 }
 
-function createAcc() {
-  var reqUrl = $("#acc_reqUrl").val().trim();
-  var apiUrl = $("#acc_apiUrl").val().trim();
-  if(apiUrl == "" || apiUrl == undefined){
-  $('#acc_apiUrl').popover('show');
-  setTimeout(()=>{
-    $('#acc_apiUrl').popover('hide');
-  },2000);
-  return;
+function checkAndTip(val, id) {
+  if (val == "" || val == undefined) {
+    $(id).popover('show');
+    setTimeout(() => {
+      $(id).popover('hide');
+    }, 2000);
+    return false;
+  }
+  return true;
 }
+
+function createAcc() {
+  var sch = $("#acc_sch").html().trim();
+  sch=sch.substring(0,sch.indexOf("<")).trim();
+  var host = $("#acc_host").val().trim();
+  if (!checkAndTip(host, "#acc_host")) {
+    return;
+  }
+  var path = $("#acc_path").val().trim();
+  if (!checkAndTip(path, "#acc_path")) {
+    return;
+  }
   var conType = $("#acc_conType").val().trim();
   var reqBody = $("#acc_reqBody").val().trim();
   var jsonData = {
-    "action":"acctoken",
+    "action": "acctoken",
     "ak": ak,
     "sk": sk,
-    "apiUrl":apiUrl,
-    "reqUrl": reqUrl,
+    "sch": sch,
+    "host": host,
+    "path": path,
     "conType": conType,
     "reqBody": reqBody,
     "deadline": deadline,
@@ -118,12 +131,14 @@ function createAcc() {
 }
 
 function createQn() {
-  var apiUrl = $("#qn_apiUrl").val().trim();
-  if(apiUrl == "" || apiUrl == undefined){
-    $('#qn_apiUrl').popover('show');
-    setTimeout(()=>{
-      $('#qn_apiUrl').popover('hide');
-    },2000);
+  var sch = $("#qn_sch").html().trim();
+  sch=sch.substring(0,sch.indexOf("<"));
+  var host = $("#qn_host").val().trim();
+  if (!checkAndTip(host, "#qn_host")) {
+    return;
+  }
+  var path = $("#qn_path").val().trim();
+  if (!checkAndTip(path, "#qn_path")) {
     return;
   }
   var reqUrl = $("#qn_reqUrl").val().trim();
@@ -131,12 +146,12 @@ function createQn() {
   var reqBody = $("#qn_reqBody").val().trim();
   var method = $("#qn_method").val().trim();
   var jsonData = {
-    "action":"qntoken",
+    "action": "qntoken",
     "ak": ak,
     "sk": sk,
-    "apiUrl":apiUrl,
-    "reqUrl": reqUrl,
-    "conType": conType,
+    "sch": sch,
+    "host": host,
+    "path": path,
     "reqBody": reqBody,
     "method": method,
     "deadline": deadline,
@@ -146,15 +161,11 @@ function createQn() {
 
 function createDn() {
   var dnUrl = $("#dn_url").val().trim();
-  if(dnUrl == "" || dnUrl == undefined){
-    $('#dn_url').popover('show');
-    setTimeout(()=>{
-      $('#dn_url').popover('hide');
-    },2000);
+  if (!checkAndTip(dnUrl, "#dn_url")) {
     return;
   }
   var jsonData = {
-    "action":"dntoken",
+    "action": "dntoken",
     "ak": ak,
     "sk": sk,
     "dnurl": dnUrl,
@@ -168,27 +179,15 @@ function createRoom() {
   var name = $("#room_name").val().trim();
   var uid = $("#room_uid").val().trim();
   var permission = $("#room_permission").val();
-  if (id == "" || id == undefined ) {
-    $('#room_id').popover('show');
-    setTimeout(()=>{
-      $('#room_id').popover('hide');
-    },2000);
+  if (!checkAndTip(id, "#room_id")) {
     return;
-  }else if (name == "" || name == undefined ){
-    $('#room_name').popover('show');
-    setTimeout(()=>{
-      $('#room_name').popover('hide');
-    },2000);
+  } else if (!checkAndTip(name, "#room_name")) {
     return;
-  }else if(uid == "" || uid == undefined){
-    $('#room_uid').popover('show');
-    setTimeout(()=>{
-      $('#room_uid').popover('hide');
-    },2000);
+  } else if (!checkAndTip(uid, "#room_uid")) {
     return;
   }
   var jsonData = {
-    "action":"roomtoken",
+    "action": "roomtoken",
     "ak": ak,
     "sk": sk,
     "appId": id,
@@ -201,31 +200,27 @@ function createRoom() {
 }
 
 function createUp() {
-  var owned  = $("#up_owned").val().trim();
+  var owned = $("#up_owned").val().trim();
   var scope = $("#up_scope").val().trim();
   var retBody = $("#up_retBody").val().trim();
   var perOps = $("#up_perOps").val().trim();
   var perNotifyUrl = $("#up_perNotifyUrl").val().trim();
   var perPipeline = $("#up_perPipeline").val().trim();
   var jsonData;
-  if(owned!=""&&owned!=undefined){
-    jsonData={
-      "action":"uptoken",
+  if (owned != "" && owned != undefined) {
+    jsonData = {
+      "action": "uptoken",
       "ak": ak,
       "sk": sk,
-      "owned":owned,
+      "owned": owned,
       "deadline": deadline,
     };
-  }else{
-    if (scope == "" || scope == undefined ) {
-      $('#up_scope').popover('show');
-      setTimeout(()=>{
-        $('#up_scope').popover('hide');
-      },2000);
+  } else {
+    if (!checkAndTip(scope, "#up_scope")) {
       return;
     }
     jsonData = {
-      "action":"uptoken",
+      "action": "uptoken",
       "ak": ak,
       "sk": sk,
       "scope": scope,
@@ -239,7 +234,7 @@ function createUp() {
   return ajaxPost(jsonData);
 }
 
-function ajaxPost(jsonData){
+function ajaxPost(jsonData) {
   var data = JSON.stringify(jsonData);
   $.ajax({
     url: '/gettoken',
@@ -247,26 +242,31 @@ function ajaxPost(jsonData){
     async: false,
     data: data,
     success: function(data) {
-        token = data;
+      token = data;
     }
   });
   return token;
 }
+
 function checknull() {
   ak = $("#accessKey").val();
   sk = $("#secretKey").val();
-  if (ak == "" || ak == undefined ) {
-    $('#accessKey').popover('show');
-    setTimeout(()=>{
-      $('#accessKey').popover('hide');
-    },2000);
+  if (!checkAndTip(ak, "#accessKey")) {
     return false;
-  }else if (sk == "" || sk == undefined ) {
-    $('#secretKey').popover('show');
-    setTimeout(()=>{
-      $('#secretKey').popover('hide');
-    },2000);
+  } else if (!checkAndTip(sk, "#secretKey")) {
     return false;
   }
   return true;
+}
+
+function changeText_Host(obj) {
+  var acc_sch = $("#acc_sch").val();
+  var ht = obj.text;
+  $("#acc_sch").html(ht + ' <span class="caret"></span>');
+}
+
+function changeText_Host_Q(obj) {
+  var acc_sch = $("#qn_sch").val();
+  var ht = obj.text;
+  $("#qn_sch").html(ht + ' <span class="caret"></span>');
 }
