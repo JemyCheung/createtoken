@@ -104,9 +104,6 @@ function createAcc() {
 }
   var conType = $("#acc_conType").val().trim();
   var reqBody = $("#acc_reqBody").val().trim();
-  if (reqUrl == "") {
-    return;
-  }
   var jsonData = {
     "action":"acctoken",
     "ak": ak,

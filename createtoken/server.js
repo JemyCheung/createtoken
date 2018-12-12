@@ -17,6 +17,13 @@ app.get('/createtoken', function(req, res) {
   });
   res.end();
 });
+app.get('/', function(req, res) {
+  console.log("requst at");
+  res.render('index.html', {
+
+  });
+  res.end();
+});
 //MP_Ebql_lSsUrDr7WrXn_5vKocQDLvTPCNEFeV
 //YZlfOKeuQVA0h7yuCJrkdcYlbcGYwEP7A8YVG9
 //http://cdn.iorange.vip/065a5c567bb06caed1e0847704bba91c.jpg
@@ -56,15 +63,19 @@ app.post('/gettoken', function(req, res) {
       var bucketManager = new qiniu.rs.BucketManager(mac, config);
       var url = body.dnurl;
       var deadline = body.deadline;
-      var arrUrl = url.split("//");
-      var start = arrUrl[1].indexOf("/");
-      var key = arrUrl[1].substring(start + 1);
-      var domain = arrUrl[1].substring(0, start);
-      var host = arrUrl[0] + "//" + domain;
-      token = bucketManager.privateDownloadUrl(host,
-        key,
-        deadline);
-      console.log(token);
+      try {
+        var arrUrl = url.split("//");
+        var start = arrUrl[1].indexOf("/");
+        var key = arrUrl[1].substring(start + 1);
+        var domain = arrUrl[1].substring(0, start);
+        var host = arrUrl[0] + "//" + domain;
+        token = bucketManager.privateDownloadUrl(host,
+          key,
+          deadline);
+      }catch(e){
+        res.write("something error occur:"+e);
+        res.end();
+      }
       res.write(token);
       res.end();
     } else if (action == "uptoken") { //done
@@ -73,7 +84,7 @@ app.post('/gettoken', function(req, res) {
       if (body.owned == undefined) {
         var options = manager.getUpOptions(body);
         putPolicy = new qiniu.rs.PutPolicy(options);
-      }else{
+      } else {
         var ret = JSON.parse(body.owned);
         var options = manager.getUpOptions(ret);
         putPolicy = new qiniu.rs.PutPolicy(options);
