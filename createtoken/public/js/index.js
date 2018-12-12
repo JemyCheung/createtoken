@@ -60,7 +60,6 @@ function dateFormat() {
     date = date.getTime();
     deadline = date / 1000;
   }
-  alert(deadline);
 }
 
 var ak = "";
@@ -70,7 +69,6 @@ var token = "";
 
 function createToken() {
   if (!checknull()) {
-    alert("请先填写ak,sk");
     return null;
   }
   dateFormat();
@@ -97,8 +95,15 @@ function createToken() {
 function createAcc() {
   var reqUrl = $("#acc_reqUrl").val().trim();
   var apiUrl = $("#acc_apiUrl").val().trim();
-  var conType = $("#acc_conType").val();
-  var reqBody = $("#acc_reqBody").val();
+  if(apiUrl == "" || apiUrl == undefined){
+  $('#acc_apiUrl').popover('show');
+  setTimeout(()=>{
+    $('#acc_apiUrl').popover('hide');
+  },2000);
+  return;
+}
+  var conType = $("#acc_conType").val().trim();
+  var reqBody = $("#acc_reqBody").val().trim();
   if (reqUrl == "") {
     return;
   }
@@ -116,11 +121,18 @@ function createAcc() {
 }
 
 function createQn() {
-  var reqUrl = $("#qn_reqUrl").val();
-  var conType = $("#qn_conType").val();
-  var reqBody = $("#qn_reqBody").val();
-  var method = $("#qn_method").val();
-  var apiUrl = $("#qn_apiUrl").val();
+  var apiUrl = $("#qn_apiUrl").val().trim();
+  if(apiUrl == "" || apiUrl == undefined){
+    $('#qn_apiUrl').popover('show');
+    setTimeout(()=>{
+      $('#qn_apiUrl').popover('hide');
+    },2000);
+    return;
+  }
+  var reqUrl = $("#qn_reqUrl").val().trim();
+  var conType = $("#qn_conType").val().trim();
+  var reqBody = $("#qn_reqBody").val().trim();
+  var method = $("#qn_method").val().trim();
   var jsonData = {
     "action":"qntoken",
     "ak": ak,
@@ -136,7 +148,14 @@ function createQn() {
 }
 
 function createDn() {
-  var dnUrl = $("#dn_url").val();
+  var dnUrl = $("#dn_url").val().trim();
+  if(dnUrl == "" || dnUrl == undefined){
+    $('#dn_url').popover('show');
+    setTimeout(()=>{
+      $('#dn_url').popover('hide');
+    },2000);
+    return;
+  }
   var jsonData = {
     "action":"dntoken",
     "ak": ak,
@@ -148,10 +167,29 @@ function createDn() {
 }
 
 function createRoom() {
-  var id = $("#room_id").val();
-  var name = $("#room_name").val();
-  var uid = $("#room_uid").val();
+  var id = $("#room_id").val().trim();
+  var name = $("#room_name").val().trim();
+  var uid = $("#room_uid").val().trim();
   var permission = $("#room_permission").val();
+  if (id == "" || id == undefined ) {
+    $('#room_id').popover('show');
+    setTimeout(()=>{
+      $('#room_id').popover('hide');
+    },2000);
+    return;
+  }else if (name == "" || name == undefined ){
+    $('#room_name').popover('show');
+    setTimeout(()=>{
+      $('#room_name').popover('hide');
+    },2000);
+    return;
+  }else if(uid == "" || uid == undefined){
+    $('#room_uid').popover('show');
+    setTimeout(()=>{
+      $('#room_uid').popover('hide');
+    },2000);
+    return;
+  }
   var jsonData = {
     "action":"roomtoken",
     "ak": ak,
@@ -167,11 +205,11 @@ function createRoom() {
 
 function createUp() {
   var owned  = $("#up_owned").val().trim();
-  var scope = $("#up_scope").val();
-  var retBody = $("#up_retBody").val();
-  var perOps = $("#up_perOps").val();
-  var perNotifyUrl = $("#up_perNotifyUrl").val();
-  var perPipeline = $("#up_perPipeline").val();
+  var scope = $("#up_scope").val().trim();
+  var retBody = $("#up_retBody").val().trim();
+  var perOps = $("#up_perOps").val().trim();
+  var perNotifyUrl = $("#up_perNotifyUrl").val().trim();
+  var perPipeline = $("#up_perPipeline").val().trim();
   var jsonData;
   if(owned!=""&&owned!=undefined){
     jsonData={
@@ -182,6 +220,13 @@ function createUp() {
       "deadline": deadline,
     };
   }else{
+    if (scope == "" || scope == undefined ) {
+      $('#up_scope').popover('show');
+      setTimeout(()=>{
+        $('#up_scope').popover('hide');
+      },2000);
+      return;
+    }
     jsonData = {
       "action":"uptoken",
       "ak": ak,
@@ -213,7 +258,17 @@ function ajaxPost(jsonData){
 function checknull() {
   ak = $("#accessKey").val();
   sk = $("#secretKey").val();
-  if (ak == "" || ak == undefined || sk == "" || sk == undefined) {
+  if (ak == "" || ak == undefined ) {
+    $('#accessKey').popover('show');
+    setTimeout(()=>{
+      $('#accessKey').popover('hide');
+    },2000);
+    return false;
+  }else if (sk == "" || sk == undefined ) {
+    $('#secretKey').popover('show');
+    setTimeout(()=>{
+      $('#secretKey').popover('hide');
+    },2000);
     return false;
   }
   return true;

@@ -35,6 +35,9 @@
      position: relative;
      top:-5px;
    }
+   .popover-content {
+   color: red;
+}
   </style>
 </head>
 
@@ -43,13 +46,13 @@
   <div class="tmodule" style="text-align:center">
     <div class="input-group">
       <span class="input-group-addon">accessKey</span>
-      <input type="text" class="form-control" placeholder="" id="accessKey">
+      <input type="text" class="form-control" placeholder="" id="accessKey" data-placement="right" data-trigger="manual" data-content="请先填写accessKey">
     </div>
     <br>
 
     <div class="input-group">
       <span class="input-group-addon">&nbsp;secretKey</span>
-      <input type="text" class="form-control" placeholder="" id="secretKey">
+      <input type="text" class="form-control" placeholder="" id="secretKey" data-placement="right" data-trigger="manual" data-content="请先填写secretKey">
     </div>
     <br>
 
@@ -59,7 +62,8 @@
     </div>
     </br>
 
-    <button type="button" class="btn btn-primary" onclick="createToken()">生成token</button>
+    <button type="button" class="btn btn-primary" onclick="createToken()" data-content="右侧的 Popover 中的一些内容" data-trigger="focus" id="ct_token">生成token</button>
+
   </div>
 
   <br><br><br>
@@ -97,7 +101,7 @@
         <tbody>
           <tr>
             <td><span style="color:red">*</span>Api Host</td>
-            <td><input type="text" class="form-control" id="acc_apiUrl" placeholder="例如：http://rs.qiniu.com/stat"></td>
+            <td><input type="text" class="form-control" id="acc_apiUrl" placeholder="例如：http://rs.qiniu.com/stat" data-placement="right" data-trigger="manual" data-content="请先填写需验证的接口host"></td>
           </tr>
           <tr>
             <td>资源</td>
@@ -131,7 +135,7 @@
         <tbody>
           <tr>
             <td><span style="color:red">*</span>scope</td>
-            <td><input type="text" class="form-control" id="up_scope"></td>
+            <td><input type="text" class="form-control" id="up_scope" data-placement="right" data-trigger="manual" data-content="请先填写存储空间"></td>
           </tr>
           <tr>
             <td>returnBody</td>
@@ -179,15 +183,15 @@
         <tbody>
           <tr>
             <td><span style="color:red">*</span>appId</td>
-            <td><input type="text" class="form-control" id="room_id"></td>
+            <td><input type="text" class="form-control" id="room_id" data-placement="right" data-trigger="manual" data-content="请先填写appId"></td>
           </tr>
           <tr>
             <td><span style="color:red">*</span>roomName</td>
-            <td><input type="text" class="form-control" id="room_name"></td>
+            <td><input type="text" class="form-control" id="room_name" data-placement="right" data-trigger="manual" data-content="请先填写房间名"></td>
           </tr>
           <tr>
             <td><span style="color:red">*</span>userId</td>
-            <td><input type="text" class="form-control" id="room_uid"></td>
+            <td><input type="text" class="form-control" id="room_uid" data-placement="right" data-trigger="manual" data-content="请先填写用户id/name"></td>
           </tr>
           <tr>
             <td>permission</td>
@@ -219,7 +223,7 @@
         <tbody>
           <tr>
             <td><span style="color:red">*</span>资源Url</td>
-            <td><input type="text" class="form-control" id="dn_url" placeholder="http://domain/key"></td>
+            <td><input type="text" class="form-control" id="dn_url" placeholder="http://domain/key" data-placement="right" data-trigger="manual" data-content="请先填写需要下载的资源url"></td>
           </tr>
 
         </tbody>
@@ -241,7 +245,7 @@
         <tbody>
           <tr>
             <td><span style="color:red">*</span>Api Host</td>
-            <td><input type="text" class="form-control" id="qn_apiUrl" placeholder="例如：http://pili.qiniuapi.com/v2/hubs/<yourhub>/streams"></td>
+            <td><input type="text" class="form-control" id="qn_apiUrl" placeholder="例如：http://pili.qiniuapi.com/v2/hubs/<yourhub>/streams" data-placement="right" data-trigger="manual" data-content="请先填写需要鉴权的api host"></td>
           </tr>
           <tr>
             <td>资源</td>
