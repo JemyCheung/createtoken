@@ -10,9 +10,18 @@
   <script src="../js/bootstrap.js"></script>
   <script src="../js/bootstrap-datetimepicker.min.js"></script>
   <script src="../js/bootstrap-datetimepicker.zh-CN.js"></script>
+  <script src="https://unpkg.com/qiniu-js@2.5.2/dist/qiniu.min.js" charset="utf-8"></script>
   <script src="../js/index.js"></script>
+  <script src="../js/base64.js"></script>
   <script type="text/javascript">
-
+  $(function () {
+         $(".dropdown").mouseover(function () {
+             $(this).addClass("open");
+         });
+         $(".dropdown").mouseleave(function(){
+             $(this).removeClass("open");
+         })
+      })
   </script>
 
   <style>
@@ -38,31 +47,40 @@
    .popover-content {
    color: red;
 }
+.tools{
+  width:100px;
+  height: 500px;
+  position: absolute;
+  right: 50px;
+  top: 100px;
+}
   </style>
 </head>
 
 <body onload="initDatepickle()">
   <br>
-  <div class="tmodule" style="text-align:center">
-    <div class="input-group">
-      <span class="input-group-addon">accessKey</span>
-      <input type="text" class="form-control" placeholder="" id="accessKey" data-placement="right" data-trigger="manual" data-content="请先填写accessKey">
-    </div>
-    <br>
+  <div style="position: relative;">
+    <div class="tmodule" style="text-align:center">
 
-    <div class="input-group">
-      <span class="input-group-addon">&nbsp;secretKey</span>
-      <input type="password" class="form-control" placeholder="" id="secretKey" data-placement="right" data-trigger="manual" data-content="请先填写secretKey">
-    </div>
-    <br>
+      <div class="input-group">
+        <span class="input-group-addon">accessKey</span>
+        <input type="text" class="form-control" placeholder="" id="accessKey" data-placement="right" data-trigger="manual" data-content="请先填写accessKey">
+      </div>
+      <br>
 
-    <div class="input-group">
-      <span class="input-group-addon">&nbsp;&nbsp;过期时间</span>
-      <input placeholder="默认一小时" id="datetimepicker" type="text" class="form-control" />
-    </div>
-    </br>
+      <div class="input-group">
+        <span class="input-group-addon">&nbsp;secretKey</span>
+        <input type="text" class="form-control" placeholder="" id="secretKey" data-placement="right" data-trigger="manual" data-content="请先填写secretKey">
+      </div>
+      <br>
+      <div class="input-group">
+        <span class="input-group-addon">&nbsp;&nbsp;过期时间</span>
+        <input placeholder="默认一小时" id="datetimepicker" type="text" class="form-control" />
+      </div>
+      </br>
+      <button type="button" class="btn btn-primary" onclick="createToken()" data-content="右侧的 Popover 中的一些内容" data-trigger="focus" id="ct_token">生成token</button>
 
-    <button type="button" class="btn btn-primary" onclick="createToken()" data-content="右侧的 Popover 中的一些内容" data-trigger="focus" id="ct_token">生成token</button>
+    </div>
 
   </div>
 
@@ -81,187 +99,201 @@
     <li onclick="choice(this)" id="dn_token"><a href="#">downloadToken</a></li>
     <li onclick="choice(this)" id="room_token"><a href="#">roomToken</a></li>
   </ul>
+  <div style="position:relative">
+    <div class="tools">
+      <div class="collapse navbar-collapse" id="navbar-collapse">
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+        <a href="#" data-toggle="dropdown">tools<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="#" onclick='showModal("b64encoder")'>base64Encoder</a></li>
+            <li><a href="#" onclick='showModal("uptest")'>upload test</a></li>
+        </ul>
+        </li>
+    </ul>
+</div>
+    </div>
+    <!-- <iframe id="myFrameId" name="tokenArea" scrolling="no" frameborder="0"></iframe>-->
+    <div id="token_module">
 
 
-  <!-- <iframe id="myFrameId" name="tokenArea" scrolling="no" frameborder="0"></iframe>-->
-  <div id="token_module">
-    <!-- accesstoken -->
-    <div class="tmodule" id="module_access">
-      <table class="table" style="height:auto">
-        </br>
-        <div class="alert alert-warning">
-          管理凭证，需要Authorization: QBox<管理凭证>鉴权的url，其他请参考&nbsp;<a href="https://developer.qiniu.com/kodo/manual/1201/access-token">管理凭证</a>
-        </div>
-        <thead>
-          <tr>
-            <th>字段</th>
-            <th>值</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span style="color:red">*</span>schema+host</td>
-            <td>
-              <!-- <div class="col-sm-6">
+      <!-- accesstoken -->
+      <div class="tmodule" id="module_access">
+        <table class="table" style="height:auto">
+          </br>
+          <div class="alert alert-warning">
+            管理凭证，需要Authorization: QBox<管理凭证>鉴权的url，其他请参考&nbsp;<a href="https://developer.qiniu.com/kodo/manual/1201/access-token">管理凭证</a>
+          </div>
+          <thead>
+            <tr>
+              <th>字段</th>
+              <th>值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span style="color:red">*</span>schema+host</td>
+              <td>
+                <!-- <div class="col-sm-6">
                 <select id="acc_http" name="select" style="width:20%" class="selectpicker show-tick form-control">
                   　　<option value="http://" selected="selected">http</option>
                   　　<option value="https://">https</option>
                 </select>
                 <input style="width:80%" type="text" class="form-control" id="acc_apiUrl" placeholder="例如：rs.qiniu.com" data-placement="right" data-trigger="manual" data-content="请先填写需验证的接口host">
               </div> -->
-              <div class="input-group">
-                <div class="input-group-btn">
-                  <button type="button" id="acc_sch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:70px">http <span class="caret"></span></button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#" onclick="changeText_Host(this)">http</a></li>
-                    <li><a href="#" onclick="changeText_Host(this)">https</a></li>
-                  </ul>
-                </div><!-- /btn-group -->
-                <input type="text" class="form-control" id="acc_host" placeholder="eg: rs.qiniu.com" data-placement="right" data-trigger="manual" data-content="host need write">
-              </div><!-- /input-group -->
-            </td>
-          </tr>
-          <tr>
-            <td><span style="color:red">*</span>path</td>
-            <td><input type="text" class="form-control" id="acc_path" placeholder="/stat/<urlsafeBase64Encode>" data-placement="right" data-trigger="manual" data-content="path need write"></td>
-          </tr>
-          <tr>
-            <td>contentType</td>
-            <td><input type="text" class="form-control" id="acc_conType" placeholder='application/json'></td>
-          </tr>
-          <tr>
-            <td>requestBody</td>
-            <td><input type="text" class="form-control" id="acc_reqBody" placeholder='{"key":"tokentest"}'></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- uploadtoken -->
-    <div class="tmoduledis" id="module_upload">
-      <table class="table" style="height:auto">
-        </br>
-        <div class="alert alert-warning">
-          上传凭证，只填scrop默认一小时权限，其他参数请参考&nbsp;<a href="https://developer.qiniu.com/kodo/manual/1206/put-policy">上传策略</a>
-        </div>
-        <thead>
-          <tr>
-            <th>字段</th>
-            <th>值</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span style="color:red">*</span>scope</td>
-            <td><input type="text" class="form-control" id="up_scope" data-placement="right" data-trigger="manual" data-content="请先填写存储空间"></td>
-          </tr>
-          <tr>
-            <td>returnBody</td>
-            <td><input type="text" class="form-control" id="up_retBody" placeholder='{"key":$(key),"hash":$(hash)}'></td>
-          </tr>
-          <tr>
-            <td>persistentOps</td>
-            <td><input type="text" class="form-control" id="up_perOps" placeholder='avthumb/m3u8/noDomain/1/segtime/15/vb/440k'></td>
-          </tr>
-          <tr>
-            <td>persistentNotifyUrl</td>
-            <td><input type="text" class="form-control" id="up_perNotifyUrl" placeholder="http://fake.com/qiniu/notify"></td>
-          </tr>
-          <tr>
-            <td>persistentPipeline</td>
-            <td><input type="text" class="form-control" id="up_perPipeline" placeholder="test"></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="line"></div>
-
-      <font color="red">上下方式任选其一生成token即可</font>
-      <p class="pline"></p>
-      <div class="input-group">
-        <span class="input-group-addon">自定义策略</span>
-        <input type="text" class="form-control" placeholder='{"scope":"test","returnBody":"{\"key\":$(key)}","deadline":1544587293}' id="up_owned">
+                <div class="input-group">
+                  <div class="input-group-btn">
+                    <button type="button" id="acc_sch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:70px">http <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#" onclick="changeText_Host(this)">http</a></li>
+                      <li><a href="#" onclick="changeText_Host(this)">https</a></li>
+                    </ul>
+                  </div><!-- /btn-group -->
+                  <input type="text" class="form-control" id="acc_host" placeholder="eg: rs.qiniu.com" data-placement="right" data-trigger="manual" data-content="host need write">
+                </div><!-- /input-group -->
+              </td>
+            </tr>
+            <tr>
+              <td><span style="color:red">*</span>path</td>
+              <td><input type="text" class="form-control" id="acc_path" placeholder="/stat/<urlsafeBase64Encode>" data-placement="right" data-trigger="manual" data-content="path need write"></td>
+            </tr>
+            <tr>
+              <td>contentType</td>
+              <td><input type="text" class="form-control" id="acc_conType" placeholder='application/json'></td>
+            </tr>
+            <tr>
+              <td>requestBody</td>
+              <td><input type="text" class="form-control" id="acc_reqBody" placeholder='{"key":"tokentest"}'></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+
+      <!-- uploadtoken -->
+      <div class="tmoduledis" id="module_upload">
+        <table class="table" style="height:auto">
+          </br>
+          <div class="alert alert-warning">
+            上传凭证，只填scrop默认一小时权限，其他参数请参考&nbsp;<a href="https://developer.qiniu.com/kodo/manual/1206/put-policy">上传策略</a>
+          </div>
+          <thead>
+            <tr>
+              <th>字段</th>
+              <th>值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span style="color:red">*</span>scope</td>
+              <td><input type="text" class="form-control" id="up_scope" data-placement="right" data-trigger="manual" data-content="请先填写存储空间"></td>
+            </tr>
+            <tr>
+              <td>returnBody</td>
+              <td><input type="text" class="form-control" id="up_retBody" placeholder='{"key":$(key),"hash":$(hash)}'></td>
+            </tr>
+            <tr>
+              <td>persistentOps</td>
+              <td><input type="text" class="form-control" id="up_perOps" placeholder='avthumb/m3u8/noDomain/1/segtime/15/vb/440k'></td>
+            </tr>
+            <tr>
+              <td>persistentNotifyUrl</td>
+              <td><input type="text" class="form-control" id="up_perNotifyUrl" placeholder="http://fake.com/qiniu/notify"></td>
+            </tr>
+            <tr>
+              <td>persistentPipeline</td>
+              <td><input type="text" class="form-control" id="up_perPipeline" placeholder="test"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="line"></div>
+
+        <font color="red">上下方式任选其一生成token即可</font>
+        <p class="pline"></p>
+        <div class="input-group">
+          <span class="input-group-addon">自定义策略</span>
+          <input type="text" class="form-control" placeholder='{"scope":"test","returnBody":"{\"key\":$(key)}","deadline":1544587293}' id="up_owned">
+        </div>
+      </div>
 
 
-    <!-- Room Token -->
-    <div class="tmoduledis" id="module_room">
-      <table class="table" style="height:auto">
-        </br>
-        <div class="alert alert-warning">
-          实时音视频连麦凭证，其他参数请参考&nbsp;<a href="https://developer.qiniu.io/rtn/sdk/4538/server-api-reference#5">服务端手册</a>
-        </div>
-        <thead>
-          <tr>
-            <th>字段</th>
-            <th>值</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span style="color:red">*</span>appId</td>
-            <td><input type="text" class="form-control" id="room_id" data-placement="right" data-trigger="manual" data-content="请先填写appId"></td>
-          </tr>
-          <tr>
-            <td><span style="color:red">*</span>roomName</td>
-            <td><input type="text" class="form-control" id="room_name" data-placement="right" data-trigger="manual" data-content="请先填写房间名"></td>
-          </tr>
-          <tr>
-            <td><span style="color:red">*</span>userId</td>
-            <td><input type="text" class="form-control" id="room_uid" data-placement="right" data-trigger="manual" data-content="请先填写用户id/name"></td>
-          </tr>
-          <tr>
-            <td>permission</td>
-            <td>
-              <div class="col-sm-6">
-                <select id="room_permission" name="select" class="selectpicker show-tick form-control">
-                  　　<option value="user" selected="selected">user</option>
-                  　　<option value="admin">admin</option>
-                </select>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!-- Download Token -->
-    <div class="tmoduledis" id="module_download">
-      <table class="table" style="height:auto">
-        </br>
-        <div class="alert alert-warning">
-          下载凭证，详情参考&nbsp;<a href="https://developer.qiniu.com/kodo/manual/1202/download-token">下载凭证</a>
-        </div>
-        <thead>
-          <tr>
-            <th>字段</th>
-            <th>值</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span style="color:red">*</span>资源Url</td>
-            <td><input type="text" class="form-control" id="dn_url" placeholder="http://domain/key" data-placement="right" data-trigger="manual" data-content="请先填写需要下载的资源url"></td>
-          </tr>
+      <!-- Room Token -->
+      <div class="tmoduledis" id="module_room">
+        <table class="table" style="height:auto">
+          </br>
+          <div class="alert alert-warning">
+            实时音视频连麦凭证，其他参数请参考&nbsp;<a href="https://developer.qiniu.io/rtn/sdk/4538/server-api-reference#5">服务端手册</a>
+          </div>
+          <thead>
+            <tr>
+              <th>字段</th>
+              <th>值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span style="color:red">*</span>appId</td>
+              <td><input type="text" class="form-control" id="room_id" data-placement="right" data-trigger="manual" data-content="请先填写appId"></td>
+            </tr>
+            <tr>
+              <td><span style="color:red">*</span>roomName</td>
+              <td><input type="text" class="form-control" id="room_name" data-placement="right" data-trigger="manual" data-content="请先填写房间名"></td>
+            </tr>
+            <tr>
+              <td><span style="color:red">*</span>userId</td>
+              <td><input type="text" class="form-control" id="room_uid" data-placement="right" data-trigger="manual" data-content="请先填写用户id/name"></td>
+            </tr>
+            <tr>
+              <td>permission</td>
+              <td>
+                <div class="col-sm-6">
+                  <select id="room_permission" name="select" class="selectpicker show-tick form-control">
+                    　　<option value="user" selected="selected">user</option>
+                    　　<option value="admin">admin</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Download Token -->
+      <div class="tmoduledis" id="module_download">
+        <table class="table" style="height:auto">
+          </br>
+          <div class="alert alert-warning">
+            下载凭证，详情参考&nbsp;<a href="https://developer.qiniu.com/kodo/manual/1202/download-token">下载凭证</a>
+          </div>
+          <thead>
+            <tr>
+              <th>字段</th>
+              <th>值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span style="color:red">*</span>资源Url</td>
+              <td><input type="text" class="form-control" id="dn_url" placeholder="http://domain/key" data-placement="right" data-trigger="manual" data-content="请先填写需要下载的资源url"></td>
+            </tr>
 
-        </tbody>
-      </table>
-    </div>
-    <!-- Qiniu Token -->
-    <div class="tmoduledis" id="module_qiniu">
-      <table class="table" style="height:auto">
-        </br>
-        <div class="alert alert-warning">
-          七牛鉴权，需要Authorization: Qiniu<七牛鉴权>进行鉴权的操作，其他请参考&nbsp;<a href="https://developer.qiniu.com/dora/kb/3702/QiniuToken">七牛鉴权</a>
-        </div>
-        <thead>
-          <tr>
-            <th>字段</th>
-            <th>值</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- <tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Qiniu Token -->
+      <div class="tmoduledis" id="module_qiniu">
+        <table class="table" style="height:auto">
+          </br>
+          <div class="alert alert-warning">
+            七牛鉴权，需要Authorization: Qiniu<七牛鉴权>进行鉴权的操作，其他请参考&nbsp;<a href="https://developer.qiniu.com/dora/kb/3702/QiniuToken">七牛鉴权</a>
+          </div>
+          <thead>
+            <tr>
+              <th>字段</th>
+              <th>值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr>
             <td><span style="color:red">*</span>Api Host</td>
             <td><input type="text" class="form-control" id="qn_apiUrl" placeholder="例如：http://pili.qiniuapi.com/v2/hubs/<yourhub>/streams" data-placement="right" data-trigger="manual" data-content="请先填写需要鉴权的api host"></td>
           </tr>
@@ -269,65 +301,105 @@
             <td>资源</td>
             <td><input type="text" class="form-control" id="qn_reqUrl" placeholder="bucket:key"></td>
           </tr> -->
-          <tr>
-            <td><span style="color:red">*</span>schema+host</td>
-            <td>
-              <div class="input-group">
-                <div class="input-group-btn">
-                  <button type="button" id="qn_sch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:70px">http <span class="caret"></span></button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#" onclick="changeText_Host_Q(this)">http</a></li>
-                    <li><a href="#" onclick="changeText_Host_Q(this)">https</a></li>
-                  </ul>
-                </div><!-- /btn-group -->
-                <input type="text" class="form-control" id="qn_host" placeholder="pili.qiniuapi.com" data-placement="right" data-trigger="manual" data-content="host need write">
-              </div><!-- /input-group -->
-            </td>
-          </tr>
-          <tr>
-            <td><span style="color:red">*</span>path</td>
-            <td><input type="text" class="form-control" id="qn_path" placeholder="/v2/hubs/<yourhub>/streams" data-placement="right" data-trigger="manual" data-content="path need write"></td>
-          </tr>
-          <tr>
-            <td>contentType</td>
-            <td><input type="text" class="form-control" id="qn_conType" placeholder="application/json"></td>
-          </tr>
-          <tr>
-            <td>requestBody</td>
-            <td><input type="text" class="form-control" id="qn_reqBody" placeholder='{"key":"<StreamTitle>"}'></td>
-          </tr>
-          <tr>
-            <td>method</td>
-            <td>
-              <div class="col-sm-6">
-                <select id="qn_method" name="select" class="selectpicker show-tick form-control">
-                  　　<option value="GET" selected="selected">GET</option>
-                  　　<option value="POST">POST</option>
-                </select>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <td><span style="color:red">*</span>schema+host</td>
+              <td>
+                <div class="input-group">
+                  <div class="input-group-btn">
+                    <button type="button" id="qn_sch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:70px">http <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#" onclick="changeText_Host_Q(this)">http</a></li>
+                      <li><a href="#" onclick="changeText_Host_Q(this)">https</a></li>
+                    </ul>
+                  </div><!-- /btn-group -->
+                  <input type="text" class="form-control" id="qn_host" placeholder="pili.qiniuapi.com" data-placement="right" data-trigger="manual" data-content="host need write">
+                </div><!-- /input-group -->
+              </td>
+            </tr>
+            <tr>
+              <td><span style="color:red">*</span>path</td>
+              <td><input type="text" class="form-control" id="qn_path" placeholder="/v2/hubs/<yourhub>/streams" data-placement="right" data-trigger="manual" data-content="path need write"></td>
+            </tr>
+            <tr>
+              <td>contentType</td>
+              <td><input type="text" class="form-control" id="qn_conType" placeholder="application/json"></td>
+            </tr>
+            <tr>
+              <td>requestBody</td>
+              <td><input type="text" class="form-control" id="qn_reqBody" placeholder='{"key":"<StreamTitle>"}'></td>
+            </tr>
+            <tr>
+              <td>method</td>
+              <td>
+                <div class="col-sm-6">
+                  <select id="qn_method" name="select" class="selectpicker show-tick form-control">
+                    　　<option value="GET" selected="selected">GET</option>
+                    　　<option value="POST">POST</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Modal） show token-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Token</h4>
+          </div>
+          <div class="modal-body" id="token_display" style="word-break:break-all"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
     </div>
 
+    <!-- Modal） base64encoder-->
+    <div class="modal fade" id="b64encoder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">base64Encoder</h4>
+          </div>
+          <div class="modal-body"  style="word-break:break-all">
+              <input type="text" id="needEndata" placeholder="need encode data" >
+            <div style="height: 40px" id="Endata"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="base64encoder()">提交</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
 
-
-  </div>
-  <!-- 模态框（Modal） -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Token</h4>
-        </div>
-        <div class="modal-body" id="token_display" style="word-break:break-all"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
+    <!-- Modal） upload test-->
+    <div class="modal fade" id="uptest" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">upload test</h4>
+          </div>
+          <div class="modal-body"  style="word-break:break-all">
+              <p><input type="text" id="mo_up_token" placeholder="token" data-placement="right" data-trigger="manual" data-content="token needed" ></p>
+              <p>请输入文件名 <input type="text" style="width:120px" id="fileName"></input></p>
+              <input type="file" name='upFile' id="upFile"></input>
+            <div style="height: 40px" id="updata"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="uploadFile()">提交</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
   </div>
 </body>
 

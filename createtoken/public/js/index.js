@@ -270,3 +270,42 @@ function changeText_Host_Q(obj) {
   var ht = obj.text;
   $("#qn_sch").html(ht + ' <span class="caret"></span>');
 }
+
+function showModal(id){
+  $("#"+id).modal();
+}
+
+function base64encoder(){
+  var data=$('#needEndata').val().trim();
+  data = urlSafeBase64Encode(data);
+    $("#Endata").html(data);
+}
+
+function uploadFile() {
+      var file = $("#upFile")[0].files[0];
+      if (file == '' && file == undefined) {
+        return;
+      }
+      var token = $("#mo_up_token").val();
+      if (!checkAndTip(token, "#mo_up_token")) {
+        return;
+      }
+      var fileName = $("#fileName").val();
+      var observable = qiniu.upload(file, fileName + "_" + new Date().getTime(), token, null, null);
+      var subscription = observable.subscribe(next, error, complete);
+      function next(res) {
+        $("#updata").html("<span>上传进度：" + res.total.percent + "%</span>");
+      }
+      function error(err) {
+        $("#updata").html("<span>发生错误：" + err.message + "</span>");
+      }
+      function complete(res) {
+        var inhtml="";
+        for(var item in res){
+          if(item!=""&&item!=undefined){
+            inhtml = inhtml+item+":"+res[item]+"</br>";
+          }
+        }
+        $("#updata").html("<span>上传完成，</span>"+ inhtml);
+      }
+    }
