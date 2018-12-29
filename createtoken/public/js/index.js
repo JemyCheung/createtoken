@@ -105,7 +105,7 @@ function checkAndTip(val, id) {
 
 function createAcc() {
   var sch = $("#acc_sch").html().trim();
-  sch=sch.substring(0,sch.indexOf("<")).trim();
+  sch = sch.substring(0, sch.indexOf("<")).trim();
   var host = $("#acc_host").val().trim();
   if (!checkAndTip(host, "#acc_host")) {
     return;
@@ -132,7 +132,7 @@ function createAcc() {
 
 function createQn() {
   var sch = $("#qn_sch").html().trim();
-  sch=sch.substring(0,sch.indexOf("<"));
+  sch = sch.substring(0, sch.indexOf("<")).trim();
   var host = $("#qn_host").val().trim();
   if (!checkAndTip(host, "#qn_host")) {
     return;
@@ -141,7 +141,6 @@ function createQn() {
   if (!checkAndTip(path, "#qn_path")) {
     return;
   }
-  var reqUrl = $("#qn_reqUrl").val().trim();
   var conType = $("#qn_conType").val().trim();
   var reqBody = $("#qn_reqBody").val().trim();
   var method = $("#qn_method").val().trim();
@@ -152,6 +151,7 @@ function createQn() {
     "sch": sch,
     "host": host,
     "path": path,
+    "conType": conType,
     "reqBody": reqBody,
     "method": method,
     "deadline": deadline,
@@ -271,41 +271,44 @@ function changeText_Host_Q(obj) {
   $("#qn_sch").html(ht + ' <span class="caret"></span>');
 }
 
-function showModal(id){
-  $("#"+id).modal();
+function showModal(id) {
+  $("#" + id).modal();
 }
 
-function base64encoder(){
-  var data=$('#needEndata').val().trim();
+function base64encoder() {
+  var data = $('#needEndata').val().trim();
   data = urlSafeBase64Encode(data);
-    $("#Endata").html(data);
+  $("#Endata").html(data);
 }
 
 function uploadFile() {
-      var file = $("#upFile")[0].files[0];
-      if (file == '' && file == undefined) {
-        return;
-      }
-      var token = $("#mo_up_token").val();
-      if (!checkAndTip(token, "#mo_up_token")) {
-        return;
-      }
-      var fileName = $("#fileName").val();
-      var observable = qiniu.upload(file, fileName + "_" + new Date().getTime(), token, null, null);
-      var subscription = observable.subscribe(next, error, complete);
-      function next(res) {
-        $("#updata").html("<span>上传进度：" + res.total.percent + "%</span>");
-      }
-      function error(err) {
-        $("#updata").html("<span>发生错误：" + err.message + "</span>");
-      }
-      function complete(res) {
-        var inhtml="";
-        for(var item in res){
-          if(item!=""&&item!=undefined){
-            inhtml = inhtml+item+":"+res[item]+"</br>";
-          }
-        }
-        $("#updata").html("<span>上传完成，</span>"+ inhtml);
+  var file = $("#upFile")[0].files[0];
+  if (file == '' && file == undefined) {
+    return;
+  }
+  var token = $("#mo_up_token").val();
+  if (!checkAndTip(token, "#mo_up_token")) {
+    return;
+  }
+  var fileName = $("#fileName").val();
+  var observable = qiniu.upload(file, fileName + "_" + new Date().getTime(), token, null, null);
+  var subscription = observable.subscribe(next, error, complete);
+
+  function next(res) {
+    $("#updata").html("<span>上传进度：" + res.total.percent + "%</span>");
+  }
+
+  function error(err) {
+    $("#updata").html("<span>发生错误：" + err.message + "</span>");
+  }
+
+  function complete(res) {
+    var inhtml = "";
+    for (var item in res) {
+      if (item != "" && item != undefined) {
+        inhtml = inhtml + item + ":" + res[item] + "</br>";
       }
     }
+    $("#updata").html("<span>上传完成，</span>" + inhtml);
+  }
+}

@@ -82,7 +82,10 @@ app.post('/gettoken', function(req, res) {
       var mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
       var putPolicy;
       if (body.owned == undefined) {
+
         var options = manager.getUpOptions(body);
+        console.log("------");
+        console.log(options);
         putPolicy = new qiniu.rs.PutPolicy(options);
       } else {
         var ret = JSON.parse(body.owned);
