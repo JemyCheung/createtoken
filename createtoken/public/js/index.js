@@ -281,6 +281,12 @@ function base64encoder() {
   $("#Endata").html(data);
 }
 
+function base64Decoder() {
+  var data = $('#needDedata').val().trim();
+  data = urlSafeBase64Decode(data);
+  $("#Dedata").html(data);
+}
+
 function uploadFile() {
   var file = $("#upFile")[0].files[0];
   if (file == '' && file == undefined) {
