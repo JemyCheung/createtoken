@@ -4,6 +4,7 @@ module.exports = {
   entry: __dirname + "/public/test_moudle/hello.js",
   output: {
     path: __dirname + "/build",
-    filename: 'hello.js'
+    filename: 'hello.js',
+    libraryTarget: "commonjs",
   },
 };

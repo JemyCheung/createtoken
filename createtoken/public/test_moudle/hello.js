@@ -6,7 +6,7 @@
   }
 
 var hello = new hello();
-module.exports = hello;
+exports.hello = hello;
 
 
 // Hello.prototype.up = function(){
