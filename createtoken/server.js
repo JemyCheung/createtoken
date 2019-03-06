@@ -44,6 +44,11 @@ app.post('/gettoken', function(req, res) {
       res.write(token);
       res.end();
     } else if (action == "qntoken") {
+      //html:{"data":{"uri": "http://cdn.iorange.vip/26e3a06ab048866178d5b38b3c88f4e3.jpeg"},"params":{"type": ["pulp","terror","politician"],"detail":true}}
+      //ai.qiniuapi.com
+      ///v1/image/censor
+      //application/json
+      //post
       console.log("qntoken");
       var mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
       token = qiniu.util.generateAccessTokenV2(mac, body.sch + "://" + body.host + body.path, body.method, body.conType, body.reqBody);
