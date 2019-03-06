@@ -297,7 +297,7 @@ function uploadFile() {
     return;
   }
   var fileName = $("#fileName").val();
-  if(fileName!=null&&fileName !== fileName && variable1 !== ''){
+  if(fileName!=null&&fileName !== undefined && fileName !== ''){
     var observable = qiniu.upload(file, fileName, token, null, null);
   }else {
     var observable = qiniu.upload(file, fileName + "_" + new Date().getTime(), token, null, null);
