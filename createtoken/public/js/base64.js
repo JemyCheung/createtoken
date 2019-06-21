@@ -1,6 +1,9 @@
 // private property
 _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+<<<<<<< HEAD
 
+=======
+>>>>>>> test
 // public method for encoding
 function b64encode(input) {
     var output = "";
@@ -21,8 +24,13 @@ function b64encode(input) {
             enc4 = 64;
         }
         output = output +
+<<<<<<< HEAD
             _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
             _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+=======
+        _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+        _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+>>>>>>> test
     }
     return output;
 }
@@ -55,14 +63,23 @@ function b64decode(input) {
 }
 
 // private method for UTF-8 encoding
+<<<<<<< HEAD
 function _utf8_encode(string) {
     string = string.replace(/\r\n/g, "\n");
+=======
+_utf8_encode = function (string) {
+    string = string.replace(/\r\n/g,"\n");
+>>>>>>> test
     var utftext = "";
     for (var n = 0; n < string.length; n++) {
         var c = string.charCodeAt(n);
         if (c < 128) {
             utftext += String.fromCharCode(c);
+<<<<<<< HEAD
         } else if ((c > 127) && (c < 2048)) {
+=======
+        } else if((c > 127) && (c < 2048)) {
+>>>>>>> test
             utftext += String.fromCharCode((c >> 6) | 192);
             utftext += String.fromCharCode((c & 63) | 128);
         } else {
@@ -76,15 +93,24 @@ function _utf8_encode(string) {
 }
 
 // private method for UTF-8 decoding
+<<<<<<< HEAD
 function _utf8_decode(utftext) {
     var string = "";
     var i = 0;
     var c = c1 = c2 = 0;
     while (i < utftext.length) {
+=======
+_utf8_decode = function (utftext) {
+    var string = "";
+    var i = 0;
+    var c = c1 = c2 = 0;
+    while ( i < utftext.length ) {
+>>>>>>> test
         c = utftext.charCodeAt(i);
         if (c < 128) {
             string += String.fromCharCode(c);
             i++;
+<<<<<<< HEAD
         } else if ((c > 191) && (c < 224)) {
             c2 = utftext.charCodeAt(i + 1);
             string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
@@ -92,6 +118,15 @@ function _utf8_decode(utftext) {
         } else {
             c2 = utftext.charCodeAt(i + 1);
             c3 = utftext.charCodeAt(i + 2);
+=======
+        } else if((c > 191) && (c < 224)) {
+            c2 = utftext.charCodeAt(i+1);
+            string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+            i += 2;
+        } else {
+            c2 = utftext.charCodeAt(i+1);
+            c3 = utftext.charCodeAt(i+2);
+>>>>>>> test
             string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
             i += 3;
         }
