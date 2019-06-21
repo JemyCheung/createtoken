@@ -277,13 +277,13 @@ function showModal(id) {
 
 function base64encoder() {
   var data = $('#needEndata').val().trim();
-  data = urlSafeBase64Encode(data);
+  data = b64encode(data);
   $("#Endata").html(data);
 }
 
 function base64Decoder() {
   var data = $('#needDedata').val().trim();
-  data = urlSafeBase64Decode(data);
+  data = b64decode(data);
   $("#Dedata").html(data);
 }
 
