@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="./jquery.min.js"></script>
+    <script src="https://unpkg.com/qiniu-js@2.5.4/dist/qiniu.min.js"></script>
+    <script type="text/javascript">
+        function uploadFile() {
+            var file = $("#upFile")[0].files[0];
+            if (file == '' && file == undefined) {
+                return;
+            }
+            var token = $("#mo_up_token").val();
+
+            var fileName = $("#fileName").val();
+            var putExtra = {
+                fname: "",
+                params: {},
+                mimeType: ["video/mp4"]
+            };
+            if (fileName != null && fileName !== undefined && fileName !== '') {
+                var observable = qiniu.upload(file, fileName, token, null, null);
+            } else {
+                var observable = qiniu.upload(file, fileName + "_" + new Date().getTime(), token, null, null);
+            }
+            var subscription = observable.subscribe(next, error, complete);
+
+            function next(res) {
+                $("#updata").html("<span>上传进度：" + res.total.percent + "%</span>");
+            }
+
+            function error(err) {
+                $("#updata").html("<span>发生错误：" + err.message + "</span>");
+            }
+
+            function complete(res) {
+                var inhtml = "";
+                for (var item in res) {
+                    if (item != "" && item != undefined) {
+                        inhtml = inhtml + item + ":" + res[item] + "</br>";
+                    }
+                }
+                $("#updata").html("<span>上传完成，</span>" + inhtml);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <p><input type="text" id="mo_up_token" placeholder="token"></p>
+    <p>请输入文件名 <input type="text" style="width:120px" id="fileName"></input></p>
+    <input type="file" name='upFile' id="upFile"></input>
+    <div style="height: 40px" id="updata"></div>
+    <button onclick="uploadFile()"> 上传</button>
+</body>
+
+</html>
