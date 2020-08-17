@@ -13,3 +13,4 @@ createtoken主要验证自己业务服务器生成的token是否正确，可调�
 - 下载源码：  
 	npm install  
 	npm start
+# test
